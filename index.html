@@ -1,0 +1,787 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#142140">
+<meta name="description" content="Czech koruna to pound converter for a trip to Prague, with a live exchange rate.">
+<title>Koruna to Pounds, Praha</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e1726'/%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='%23d6ad57' stroke-width='2'/%3E%3Cpath d='M16 9v7l4 3' stroke='%23d6ad57' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Jost:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root { padding-top: env(safe-area-inset-top, 0px); }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+/* Layout: mobile-first single column. Sunrise rooftop hero, converter card first, then chart / notes / prices / tips, with a thumb-reach tab bar fixed to the bottom. Deliberately single dark theme. */
+:root {
+  --ink: #0e1726;          /* Vltava before dawn */
+  --river: #172740;        /* raised panels */
+  --river-2: #22375a;      /* borders, rules */
+  --gold: #d6ad57;         /* astronomical clock gilt */
+  --gold-soft: #a88845;
+  --roof: #c4573a;         /* terracotta roof tiles */
+  --dawn: #e8916a;         /* sunrise glow */
+  --parchment: #efe6d2;    /* text */
+  --mist: #9aa7bd;         /* secondary text */
+  --font-display: "Marcellus SC", "Trajan Pro", Georgia, serif;
+  --font-body: "Jost", "Futura", "Avenir Next", system-ui, sans-serif;
+  --font-num: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --nav-h: 64px;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  background: var(--ink);
+  color: var(--parchment);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  padding-bottom: calc(var(--nav-h) + env(safe-area-inset-bottom, 0px));
+  -webkit-tap-highlight-color: transparent;
+}
+.wrap {
+  max-width: 560px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+/* ---------- Sunrise hero ---------- */
+.hero {
+  position: relative;
+  background: linear-gradient(180deg,
+    #142140 0%, #2b2f5a 22%, #5b4672 42%, #a65f72 60%, #e08868 76%, #f3bd78 90%, #f8d79a 100%);
+  overflow: hidden;
+}
+.hero .wrap { position: relative; z-index: 2; padding-block: 24px 0; }
+.eyebrow {
+  font-family: var(--font-num);
+  font-size: 11px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin: 0 0 10px;
+}
+h1 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(38px, 11vw, 72px);
+  line-height: .95;
+  margin: 0;
+  letter-spacing: .01em;
+  text-shadow: 0 2px 20px rgba(14,23,38,.35);
+}
+h1 .amp { color: var(--gold); font-size: .7em; }
+.lede {
+  color: #e6dcd0;
+  margin: 8px 0 0;
+  font-size: 15px;
+  max-width: 34ch;
+}
+.skyline { display: block; width: 100%; height: auto; margin-top: -8px; position: relative; z-index: 1; }
+
+/* ---------- Converter card ---------- */
+.convert { margin-top: -2px; padding-block: 4px 8px; }
+.card {
+  background: var(--river);
+  border: 1px solid var(--river-2);
+  border-radius: 14px;
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+}
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.lede-row { display: flex; align-items: center; gap: 12px; }
+.lede-row .lede { flex: 1; min-width: 0; }
+.pair { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 8px; align-items: center; }
+.eq { font: 500 18px var(--font-num); color: var(--gold-soft); }
+h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 26px;
+  line-height: 1.1;
+  margin: 0;
+  text-wrap: balance;
+}
+.clock { width: 68px; height: 68px; flex: none; filter: drop-shadow(0 4px 14px rgba(14,23,38,.45)); }
+.clock svg { width: 100%; height: 100%; display: block; }
+.field {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  align-items: center;
+  background: var(--ink);
+  border: 1px solid var(--river-2);
+  border-radius: 10px;
+  min-height: 60px;
+}
+.field:focus-within { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(214,173,87,.15); }
+.field label {
+  font-family: var(--font-display);
+  font-size: 19px;
+  color: var(--gold);
+  text-align: center;
+  height: 100%;
+  display: grid; place-items: center end;
+}
+.field input {
+  width: 100%;
+  min-width: 0;
+  background: transparent;
+  border: 0;
+  color: var(--parchment);
+  font-family: var(--font-num);
+  font-size: clamp(22px, 6.6vw, 30px);
+  text-align: right;
+  padding: 8px 12px 8px 4px;
+  font-variant-numeric: tabular-nums;
+}
+.field input:focus { outline: none; }
+.chips { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 44px 0 16px;
+  -webkit-mask-image: linear-gradient(90deg, #000 86%, transparent); mask-image: linear-gradient(90deg, #000 86%, transparent); }
+.chips::-webkit-scrollbar { display: none; }
+.chip {
+  flex: none;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--river-2);
+  background: transparent;
+  color: var(--parchment);
+  font: 500 14px var(--font-num);
+  cursor: pointer;
+}
+.chip[aria-pressed="true"] { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+.chip:focus-visible, .seg button:focus-visible, .tabbar a:focus-visible, summary:focus-visible, .rate-box button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.mental {
+  border-left: 2px solid var(--roof);
+  padding: 2px 0 2px 12px;
+  margin: 0;
+  font-size: 14px;
+  color: var(--parchment);
+}
+.mental span { color: var(--mist); }
+.quick { margin: 0; font-size: 13px; color: var(--mist); }
+.quick b { color: var(--parchment); font-weight: 500; }
+details.rate { border-top: 1px dashed var(--river-2); padding-top: 10px; }
+details.rate summary {
+  list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+  min-height: 36px; font-size: 14px; color: var(--mist);
+}
+details.rate summary::-webkit-details-marker { display: none; }
+details.rate summary b { color: var(--parchment); font-family: var(--font-num); font-weight: 500; }
+details.rate summary .edit { color: var(--gold); font-size: 13px; }
+.rate-box { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding-top: 8px; font-size: 14px; color: var(--mist); }
+.rate-box input {
+  width: 8ch; min-height: 44px;
+  background: var(--ink); border: 1px solid var(--river-2); border-radius: 8px;
+  color: var(--parchment); font: 500 18px var(--font-num); text-align: right; padding: 0 10px;
+}
+.rate-box input:focus { outline: none; border-color: var(--gold); }
+.rate-box button {
+  min-height: 44px; padding: 0 14px; border-radius: 8px;
+  background: none; border: 1px solid var(--gold-soft); color: var(--gold);
+  font: 500 14px var(--font-body); cursor: pointer;
+}
+.rate-box p { margin: 0; flex-basis: 100%; font-size: 12px; }
+.rate-src { display: block; font-size: 12px; color: var(--mist); line-height: 1.4; }
+.rate-src::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 6px; background: var(--mist); vertical-align: 1px; }
+.rate-src[data-state="live"]::before { background: #7fc79a; }
+.rate-src[data-state="manual"]::before { background: var(--gold); }
+.rate-src[data-state="loading"]::before { animation: pulse 1s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .25; } }
+@media (prefers-reduced-motion: reduce) { .rate-src[data-state="loading"]::before { animation: none; } }
+
+/* ---------- Sections ---------- */
+section.block { padding-block: 32px 8px; scroll-margin-top: 12px; }
+.sub { color: var(--mist); margin: 6px 0 16px; font-size: 15px; }
+.rule { display: flex; align-items: center; gap: 10px; max-width: 180px; margin: 28px auto 0; }
+.rule::before, .rule::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-soft)); }
+.rule::after { transform: scaleX(-1); }
+.rule i { width: 7px; height: 7px; background: var(--gold); transform: rotate(45deg); }
+
+/* Chart */
+.seg {
+  display: grid; grid-template-columns: 1fr 1fr;
+  background: var(--river); border: 1px solid var(--river-2); border-radius: 10px; padding: 4px; gap: 4px;
+  margin-bottom: 12px;
+}
+.seg button {
+  min-height: 42px; border: 0; border-radius: 7px; background: transparent; color: var(--mist);
+  font: 500 14px var(--font-num); letter-spacing: .04em; cursor: pointer;
+}
+.seg button[aria-pressed="true"] { background: var(--gold); color: var(--ink); }
+.ledger {
+  position: relative;
+  display: grid; grid-auto-flow: column; grid-template-rows: repeat(var(--rows, 9), auto); grid-auto-columns: minmax(0, 1fr); column-gap: 28px;
+  background: var(--river); border: 1px solid var(--river-2); border-radius: 14px; padding: 4px 16px;
+}
+.ledger::before { content: ""; position: absolute; top: 14px; bottom: 14px; left: 50%; width: 1px; background: var(--river-2); }
+.ledger button {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 8px;
+  min-height: 42px; padding: 10px 0; background: none; border: 0; border-top: 1px dashed var(--river-2);
+  font: 400 clamp(13px, 3.7vw, 15px) var(--font-num); font-variant-numeric: tabular-nums; white-space: nowrap;
+  color: var(--parchment); cursor: pointer; text-align: left;
+}
+.ledger button.top { border-top-color: transparent; }
+.ledger button span:first-child { color: var(--mist); }
+.ledger button.key span:first-child { color: var(--gold); }
+.ledger button:active span { color: var(--gold); }
+.ledger button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+/* Banknotes */
+.notes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.note {
+  position: relative; overflow: hidden;
+  border-radius: 10px; padding: 12px 14px; min-height: 124px;
+  display: grid; grid-template-rows: auto 1fr auto; gap: 4px;
+  color: #1b1712; background: var(--tint);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 0 5px rgba(255,255,255,.12);
+}
+.note::after {
+  content: ""; position: absolute; right: -46px; top: 50%; width: 90px; height: 90px;
+  transform: translateY(-50%); border-radius: 50%;
+  border: 1px solid rgba(0,0,0,.18); box-shadow: 0 0 0 8px rgba(255,255,255,.12), 0 0 0 9px rgba(0,0,0,.1);
+}
+.note .val { font-family: var(--font-display); font-size: 26px; line-height: 1; }
+.note .val small { font-size: 14px; }
+.note .who { font-size: 12px; opacity: .8; max-width: 18ch; line-height: 1.35; }
+.note .gbp { font: 500 18px var(--font-num); }
+
+/* Prices */
+.price {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 12px; align-items: start;
+  padding: 13px 0; border-bottom: 1px solid var(--river-2);
+}
+.price .what { min-width: 0; line-height: 24px; }
+.price .what em { display: block; font-style: normal; color: var(--mist); font-size: 13px; line-height: 20px; }
+.price .amt { text-align: right; font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+.price .amt b { display: block; color: var(--gold); font-weight: 500; font-size: 16px; line-height: 24px; }
+.price .amt span { display: block; color: var(--mist); font-size: 13px; line-height: 20px; }
+.h2-gap { margin-top: 32px; }
+.day { margin-top: 18px; }
+.day:first-child { margin-top: 0; }
+.day-head {
+  display: flex; align-items: baseline; gap: 10px;
+  font-family: var(--font-num); font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--gold); padding-bottom: 6px; border-bottom: 1px solid var(--gold-soft);
+}
+.day-head span { color: var(--mist); letter-spacing: .06em; text-transform: none; font-family: var(--font-body); font-size: 13px; }
+.price .time { font-family: var(--font-num); font-size: 12px; color: var(--dawn); margin-right: 6px; }
+.tag {
+  display: inline-block; margin-left: 6px; padding: 0 6px; border-radius: 999px;
+  font: 500 10px var(--font-num); letter-spacing: .08em; text-transform: uppercase; vertical-align: 2px;
+  color: var(--ink); background: var(--gold);
+}
+
+/* Tips & phrases */
+.tips { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.tips li { padding-left: 24px; position: relative; font-size: 15px; }
+.tips li::before {
+  content: ""; position: absolute; left: 2px; top: .5em; width: 9px; height: 9px;
+  background: var(--roof); transform: rotate(45deg);
+}
+.tips b { font-weight: 600; }
+.phrases { margin-top: 28px; }
+.phrase { padding: 12px 0; border-bottom: 1px solid var(--river-2); }
+.phrase .cz { font-family: var(--font-body); font-weight: 500; font-size: 18px; }
+.phrase .say { font-family: var(--font-num); font-size: 12px; color: var(--gold-soft); margin-left: 8px; }
+.phrase .en { display: block; color: var(--mist); font-size: 14px; }
+
+footer { padding-block: 32px 24px; color: var(--mist); font-size: 12px; }
+footer p { margin: 0 0 8px; }
+footer a { color: var(--gold); }
+footer .sig { font-family: var(--font-display); font-size: 15px; color: var(--parchment); margin-top: 14px; }
+
+/* ---------- Bottom tab bar ---------- */
+.tabbar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+  background: rgba(10,17,30,.94);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  border-top: 1px solid var(--river-2);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+}
+.tabbar ul { list-style: none; margin: 0 auto; padding: 0; max-width: 560px; display: grid; grid-template-columns: repeat(4, 1fr); }
+.tabbar a {
+  height: var(--nav-h);
+  display: grid; justify-items: center; align-content: center; gap: 4px;
+  color: var(--mist); text-decoration: none;
+  font: 500 10px var(--font-num); letter-spacing: .1em; text-transform: uppercase;
+}
+.tabbar svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.tabbar a { position: relative; }
+.tabbar a[aria-current="true"] { color: var(--gold); }
+.tabbar a[aria-current="true"]::before { content: ""; position: absolute; top: -1px; left: 50%; width: 28px; height: 2px; margin-left: -14px; background: var(--gold); border-radius: 0 0 2px 2px; }
+
+.hand { transition: transform .6s cubic-bezier(.3,.7,.3,1); transform-origin: 50px 50px; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .hand { transition: none; }
+}
+</style>
+
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Martin &amp; Alex · Praha</p>
+    <h1>Koruna <span class="amp">&amp;</span> Pounds</h1>
+  </div>
+  <svg class="skyline" id="skyline" viewBox="0 0 400 170" preserveAspectRatio="xMidYMax slice" role="img" aria-label="Sunrise over Prague's rooftops and spires, with Prague Castle, the Týn Church's twin spires and the Old Town Hall tower in silhouette"></svg>
+</header>
+
+<main>
+  <section class="convert" id="convert">
+    <div class="wrap">
+      <div class="card">
+        <h2 class="sr-only">Convert a price</h2>
+        <div class="pair">
+        <div class="field">
+          <label for="czk">Kč</label>
+          <input id="czk" type="text" inputmode="decimal" enterkeyhint="done" autocomplete="off" value="500" aria-label="Amount in Czech koruna">
+        </div>
+        <span class="eq" aria-hidden="true">=</span>
+        <div class="field">
+          <label for="gbp">£</label>
+          <input id="gbp" type="text" inputmode="decimal" enterkeyhint="done" autocomplete="off" aria-label="Amount in pounds">
+        </div>
+        </div>
+        <div class="chips" id="chips" role="group" aria-label="Quick amounts in koruna"></div>
+        <p class="quick" id="mental"></p>
+        <details class="rate" id="rateDetails">
+          <summary><span>Rate: <b id="rateLabel">£1 = 29.23 Kč</b><small class="rate-src" id="rateSrc"></small></span><span class="edit">Change</span></summary>
+          <div class="rate-box">
+            <label for="rate">£1 =</label>
+            <input id="rate" type="text" inputmode="decimal" value="29.23">
+            <span>Kč</span>
+            <button type="button" id="reset">Use live rate</button>
+            <p id="rateNote">The rate updates itself from the European Central Bank. To use your own, such as your bank's, type it here and every number on the page follows.</p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="chart">
+    <div class="wrap">
+      <h2>Conversion chart</h2>
+      <p class="sub">Tap any amount to load it into the converter.</p>
+      <div class="seg" role="group" aria-label="Chart direction">
+        <button type="button" id="segCzk" aria-pressed="true">Kč → £</button>
+        <button type="button" id="segGbp" aria-pressed="false">£ → Kč</button>
+      </div>
+      <div class="ledger" id="ledger"></div>
+      <div class="rule" aria-hidden="true"><i></i></div>
+    </div>
+  </section>
+
+  <section class="block" id="prices">
+    <div class="wrap">
+      <h2>Where you're eating</h2>
+      <p class="sub">Your plan, day by day. Prices are rough estimates for the two of you, a main and a drink each, not menu prices.</p>
+      <div id="dineList"></div>
+      <p class="mental" id="dineTotal" style="margin-top:16px"></p>
+      <h2 class="h2-gap">Other costs</h2>
+      <div id="priceList"></div>
+      <div class="rule" aria-hidden="true"><i></i></div>
+    </div>
+  </section>
+
+  <section class="block" id="tips">
+    <div class="wrap">
+      <h2>Money tips</h2>
+      <p class="sub">Small habits that keep the rate on your side.</p>
+      <ul class="tips">
+        <li><b>Always pay in koruna.</b> When a card machine or ATM offers to charge you in pounds, decline. That conversion usually adds 5–10%.</li>
+        <li><b>Skip the stand-alone ATMs</b> on tourist streets. Use one attached to a bank, such as Česká spořitelna, ČSOB or Komerční banka.</li>
+        <li><b>Tap your card on trams</b> or use the PID Lítačka app. Keep a few hundred Kč for small pubs and market stalls.</li>
+        <li><b>Tip around 10%</b> in restaurants. Tell the server the total you want to pay rather than leaving coins.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Rates are the European Central Bank reference rate, published each working day and fetched when you open the page. If you are offline, the last saved rate is used. Your card will charge a little more, so treat the pounds as a close estimate.</p>
+    <p>Prices are typical guides, not quotes.</p>
+    <p class="sig">M &amp; A · Praha</p>
+  </div>
+</footer>
+
+<nav class="tabbar" aria-label="Sections">
+  <ul>
+    <li><a href="#convert" data-sec="convert"><svg viewBox="0 0 24 24"><path d="M4 8h13l-3-3M20 16H7l3 3"/></svg>Convert</a></li>
+    <li><a href="#chart" data-sec="chart"><svg viewBox="0 0 24 24"><path d="M5 5h14v14H5zM5 10h14M5 15h14M12 5v14"/></svg>Chart</a></li>
+    <li><a href="#prices" data-sec="prices"><svg viewBox="0 0 24 24"><path d="M7 4h10l-1 5a4 4 0 0 1-8 0zM12 13v6M8 20h8"/></svg>Eating</a></li>
+    <li><a href="#tips" data-sec="tips"><svg viewBox="0 0 24 24"><path d="M12 4a5 5 0 0 1 3 9v2H9v-2a5 5 0 0 1 3-9zM10 19h4"/></svg>Tips</a></li>
+  </ul>
+</nav>
+
+<script>
+(function () {
+  const BUILT_IN = { rate: 29.23, date: "2026-11-13" };   // fallback if the page has never been online
+  const MAX_AGE = 3 * 60 * 60 * 1000;                      // refetch after 3 hours; the ECB updates once a day
+  const ok = (v) => typeof v === "number" && v > 5 && v < 100;
+  const store = {
+    get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} },
+    del(k) { try { localStorage.removeItem(k); } catch (e) {} }
+  };
+  let cache = store.get("czkLive");                        // { rate, date, fetchedAt }
+  if (!cache || !ok(cache.rate)) cache = null;
+  let manual = store.get("czkManual");                     // number, only when the user typed their own
+  if (!ok(manual)) manual = null;
+  let rate = manual || (cache ? cache.rate : BUILT_IN.rate);
+  let fetching = false, failed = false;
+
+  const $ = (id) => document.getElementById(id);
+  const czkIn = $("czk"), gbpIn = $("gbp"), rateIn = $("rate");
+  rateIn.value = rate.toFixed(2);
+  const fmtDate = (iso) => { const d = new Date(iso + "T12:00:00"); return isNaN(d) ? iso : d.toLocaleDateString("en-GB", { day: "numeric", month: "short" }); };
+
+  const fmtGBP = (n) => "£" + (n < 1000 ? n.toFixed(2) : Math.round(n).toLocaleString("en-GB"));
+  const fmtCZK = (n) => Math.round(n).toLocaleString("en-GB") + " Kč";
+  const parse = (v) => parseFloat(String(v).replace(/\s/g, "").replace(",", "."));
+
+  /* ---------- Sunrise skyline ---------- */
+  const NS = "http://www.w3.org/2000/svg";
+  function add(parent, tag, attrs) {
+    const el = document.createElementNS(NS, tag);
+    for (const k in attrs) el.setAttribute(k, attrs[k]);
+    parent.appendChild(el);
+    return el;
+  }
+  const sky = $("skyline");
+  const defs = add(sky, "defs", {});
+  const rg = add(defs, "radialGradient", { id: "sunGlow" });
+  add(rg, "stop", { offset: "0", "stop-color": "#fff1c9", "stop-opacity": "1" });
+  add(rg, "stop", { offset: ".25", "stop-color": "#ffd88a", "stop-opacity": ".9" });
+  add(rg, "stop", { offset: "1", "stop-color": "#f3a96f", "stop-opacity": "0" });
+  add(sky, "circle", { cx: 262, cy: 122, r: 90, fill: "url(#sunGlow)" });
+  add(sky, "circle", { cx: 262, cy: 122, r: 22, fill: "#fff3d4" });
+
+  // seeded random so the city looks the same every time
+  let seed = 7;
+  const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+
+  function roofs(g, y0, x0, x1, hMin, hMax, wMin, wMax) {
+    let d = `M${x0} 170 L${x0} ${y0}`;
+    let x = x0;
+    while (x < x1) {
+      const w = wMin + rnd() * (wMax - wMin);
+      const h = hMin + rnd() * (hMax - hMin);
+      const top = y0 - h;
+      const kind = rnd();
+      d += ` L${x} ${top}`;
+      if (kind < .45) {                     // steep gable
+        d += ` L${x + w / 2} ${top - w * .55} L${x + w} ${top}`;
+      } else if (kind < .7) {               // hipped roof with chimney
+        d += ` L${x + w * .2} ${top - 6} L${x + w * .55} ${top - 6} L${x + w * .55} ${top - 10} L${x + w * .65} ${top - 10} L${x + w * .65} ${top - 6} L${x + w * .8} ${top - 6} L${x + w} ${top}`;
+      } else if (kind < .85) {              // mansard
+        d += ` L${x + w * .15} ${top - 7} L${x + w * .85} ${top - 7} L${x + w} ${top}`;
+      } else {                              // small turret
+        d += ` L${x + w * .4} ${top} L${x + w * .4} ${top - 8} L${x + w * .5} ${top - 18} L${x + w * .6} ${top - 8} L${x + w * .6} ${top} L${x + w} ${top}`;
+      }
+      x += w;
+    }
+    d += ` L${x1} 170 Z`;
+    add(g, "path", { d });
+  }
+  function spire(g, x, base, w, h, tipH) {
+    add(g, "rect", { x: x - w / 2, y: base - h, width: w, height: 170 - (base - h) });
+    add(g, "polygon", { points: `${x - w / 2 - 1},${base - h} ${x},${base - h - tipH} ${x + w / 2 + 1},${base - h}` });
+  }
+  function bulb(g, x, base, w, h) {          // baroque onion cupola
+    add(g, "rect", { x: x - w / 2, y: base - h, width: w, height: 170 - (base - h) });
+    add(g, "path", { d: `M${x - w / 2} ${base - h} Q${x - w * .9} ${base - h - w * .7} ${x} ${base - h - w * 1.3} Q${x + w * .9} ${base - h - w * .7} ${x + w / 2} ${base - h} Z` });
+    add(g, "rect", { x: x - .8, y: base - h - w * 1.3 - 9, width: 1.6, height: 9 });
+  }
+  function dome(g, x, base, r) {
+    add(g, "path", { d: `M${x - r} ${base} A${r} ${r} 0 0 1 ${x + r} ${base} Z` });
+    add(g, "rect", { x: x - r, y: base - .5, width: r * 2, height: 170 - base + .5 });
+    add(g, "rect", { x: x - 2, y: base - r - 8, width: 4, height: 8 });
+  }
+
+  // far layer: castle hill and Petřín, hazy violet
+  const far = add(sky, "g", { fill: "#573d66", opacity: ".92" });
+  // Petřín hill on the left, castle ridge in the middle, both sloping down to the river
+  add(far, "path", { d: "M0 170 L0 92 Q24 78 50 86 Q70 92 90 96 L186 96 Q222 100 252 124 Q296 148 404 152 L404 170 Z" });
+  add(far, "polygon", { points: "21,100 25,46 27,46 31,100" });    // Petřín lookout tower, base buried in the hill
+  add(far, "rect", { x: 23, y: 42, width: 6, height: 5 });
+  add(far, "polygon", { points: "92,104 92,84 98,78 180,78 186,84 186,104" }); // castle front, sitting on the ridge
+  add(far, "rect", { x: 112, y: 58, width: 52, height: 24 });      // St Vitus nave
+  spire(far, 117, 62, 6, 10, 26);
+  spire(far, 127, 62, 6, 10, 26);
+  bulb(far, 154, 60, 9, 18);                                       // great south tower
+  for (let x = 133; x < 150; x += 5) add(far, "polygon", { points: `${x},58 ${x + 1.5},51 ${x + 3},58` });
+
+  // middle layer: dusky plum rooftops
+  const hz = add(defs, "linearGradient", { id: "haze", x1: 0, y1: 0, x2: 0, y2: 1 });
+  add(hz, "stop", { offset: "0", "stop-color": "#f3bd78", "stop-opacity": "0" });
+  add(hz, "stop", { offset: "1", "stop-color": "#f3bd78", "stop-opacity": ".6" });
+  add(sky, "rect", { x: 0, y: 106, width: 400, height: 64, fill: "url(#haze)", opacity: ".7" });
+  const midG = add(sky, "g", { fill: "#3a2b49" });
+  roofs(midG, 138, -4, 404, 4, 14, 10, 20);
+  dome(midG, 60, 122, 13);                                         // St Nicholas dome
+  bulb(midG, 78, 128, 7, 26);                                      // its belfry
+  spire(midG, 196, 132, 7, 26, 20);
+  bulb(midG, 350, 132, 8, 20);
+
+  // near layer: ink silhouettes that melt into the page
+  add(sky, "rect", { x: 0, y: 128, width: 400, height: 42, fill: "url(#haze)", opacity: ".35" });
+  const near = add(sky, "g", { fill: "#0e1726" });
+  roofs(near, 158, -4, 404, 2, 16, 12, 26);
+  // Old Town Hall tower with its gallery
+  add(near, "rect", { x: 160, y: 104, width: 14, height: 56 });
+  add(near, "rect", { x: 157, y: 102, width: 20, height: 4 });
+  for (const dx of [157, 162, 167, 172]) add(near, "polygon", { points: `${dx},102 ${dx + 2.5},94 ${dx + 5},102` });
+  add(near, "polygon", { points: "160,96 167,78 174,96" });
+  // Týn Church twin spires with corner pinnacles
+  for (const tx of [222, 244]) {
+    add(near, "rect", { x: tx, y: 92, width: 13, height: 70 });
+    add(near, "polygon", { points: `${tx - 1},94 ${tx + 6.5},40 ${tx + 14},94` });
+    for (const off of [0, 4, 9, 13]) add(near, "polygon", { points: `${tx + off - 1.8},96 ${tx + off},80 ${tx + off + 1.8},96` });
+    add(near, "circle", { cx: tx + 6.5, cy: 38, r: 2 });
+  }
+  add(near, "rect", { x: 230, y: 112, width: 22, height: 50 });
+  add(near, "polygon", { points: "228,114 241,100 254,114" });
+  // Powder Tower
+  add(near, "rect", { x: 318, y: 112, width: 16, height: 50 });
+  add(near, "polygon", { points: "315,114 326,90 337,114" });
+  for (const dx of [316, 334]) add(near, "polygon", { points: `${dx - 2},114 ${dx},104 ${dx + 2},114` });
+  // a few windows still lit at dawn
+  const lit = add(sky, "g", { fill: "#f3c06e" });
+  [[30,158],[48,159],[92,157],[118,159],[140,158],[198,157],[282,159],[300,158],[366,157],[384,159],[166,118],[166,130]]
+    .forEach(([x, y]) => add(lit, "rect", { x, y, width: 2.2, height: 3, opacity: .85 }));
+  // soft mist above the river
+  add(sky, "rect", { x: 0, y: 162, width: 400, height: 8, fill: "#0e1726" });
+
+  /* ---------- Astronomical clock (Orloj) mini dial ---------- */
+  const o = add(sky, "svg", { x: 326, y: 12, width: 58, height: 58, viewBox: "0 0 100 100" }), C = 50;
+  add(o, "circle", { cx: C, cy: C, r: 48, fill: "#0e1726", stroke: "#d6ad57", "stroke-width": 1.5 });
+  const arc = (r, a0, a1, color, sw, op) => {
+    const p = (a) => [C + r * Math.cos(a * Math.PI / 180), C + r * Math.sin(a * Math.PI / 180)];
+    const [sx, sy] = p(a0), [ex, ey] = p(a1);
+    add(o, "path", { d: `M${sx} ${sy} A${r} ${r} 0 ${a1 - a0 > 180 ? 1 : 0} 1 ${ex} ${ey}`, fill: "none", stroke: color, "stroke-width": sw, opacity: op || 1 });
+  };
+  arc(39, 200, 340, "#2b4a77", 12);
+  arc(39, 160, 200, "#c4573a", 12, .85);
+  arc(39, 340, 380, "#c4573a", 12, .85);
+  arc(39, 20, 160, "#060b15", 12);
+  add(o, "circle", { cx: C, cy: C, r: 32, fill: "#172740", stroke: "#d6ad57", "stroke-width": .8 });
+  for (let i = 0; i < 24; i++) {
+    const a = (i / 24) * Math.PI * 2;
+    const r2 = i % 6 === 0 ? 41 : 43.5;
+    add(o, "line", { x1: C + 46 * Math.cos(a), y1: C + 46 * Math.sin(a), x2: C + r2 * Math.cos(a), y2: C + r2 * Math.sin(a), stroke: "#d6ad57", "stroke-width": i % 6 === 0 ? 1.2 : .6 });
+  }
+  add(o, "circle", { cx: C + 5, cy: C - 3, r: 20, fill: "none", stroke: "#a88845", "stroke-width": .6, "stroke-dasharray": "1 2.5" });
+  const sunHand = add(o, "g", { class: "hand" });
+  add(sunHand, "line", { x1: C, y1: C + 5, x2: C, y2: C - 30, stroke: "#d6ad57", "stroke-width": 1.6, "stroke-linecap": "round" });
+  add(sunHand, "circle", { cx: C, cy: C - 21, r: 4, fill: "#d6ad57" });
+  const moonHand = add(o, "g", { class: "hand" });
+  add(moonHand, "line", { x1: C, y1: C + 4, x2: C, y2: C - 20, stroke: "#efe6d2", "stroke-width": 1.2, "stroke-linecap": "round" });
+  add(moonHand, "circle", { cx: C, cy: C - 14, r: 3, fill: "#efe6d2" });
+  add(moonHand, "circle", { cx: C + 1.3, cy: C - 15, r: 2.6, fill: "#172740" });
+  add(o, "circle", { cx: C, cy: C, r: 2, fill: "#d6ad57" });
+
+  function update(czk) {
+    const v = isFinite(czk) && czk > 0 ? czk : 0;
+    const gbp = v / rate;
+    sunHand.style.transform = `rotate(${(v % 2000) / 2000 * 360}deg)`;
+    moonHand.style.transform = `rotate(${(gbp % 100) / 100 * 360}deg)`;
+    document.querySelectorAll(".chip").forEach((c) => c.setAttribute("aria-pressed", String(+c.dataset.v === v)));
+  }
+
+  /* ---------- Converter ---------- */
+  function fromCZK() {
+    const v = parse(czkIn.value);
+    gbpIn.value = isFinite(v) ? (v / rate).toFixed(2) : "";
+    update(v);
+  }
+  function fromGBP() {
+    const v = parse(gbpIn.value);
+    czkIn.value = isFinite(v) ? Math.round(v * rate).toString() : "";
+    update(v * rate);
+  }
+  function setCZK(v) { czkIn.value = String(v); fromCZK(); }
+  czkIn.addEventListener("input", fromCZK);
+  gbpIn.addEventListener("input", fromGBP);
+  [czkIn, gbpIn].forEach((el) => el.addEventListener("focus", () => el.select()));
+
+  const chipVals = [100, 250, 500, 1000, 2000, 5000];
+  $("chips").innerHTML = chipVals.map((v) => `<button type="button" class="chip" data-v="${v}" aria-pressed="false">${fmtCZK(v)}</button>`).join("");
+  $("chips").addEventListener("click", (e) => { const b = e.target.closest(".chip"); if (b) setCZK(+b.dataset.v); });
+
+  function showRate() {
+    const src = $("rateSrc");
+    let text, state;
+    if (manual) { text = "Your own rate"; state = "manual"; }
+    else if (fetching && !cache) { text = "Fetching live rate…"; state = "loading"; }
+    else if (cache && !failed) { text = `ECB rate, ${fmtDate(cache.date)}`; state = "live"; }
+    else if (cache) { text = `Offline. Saved ECB rate from ${fmtDate(cache.date)}`; state = "stale"; }
+    else { text = `Offline. Built-in rate from ${fmtDate(BUILT_IN.date)}`; state = "stale"; }
+    src.textContent = text; src.dataset.state = state;
+  }
+  function applyRate(v) {
+    rate = v;
+    if (document.activeElement !== rateIn) rateIn.value = rate.toFixed(2);
+    renderAll(); fromCZK(); showRate();
+  }
+  async function getJSON(url) {
+    const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 8000);
+    try { const res = await fetch(url, { signal: ctl.signal, cache: "no-store" }); if (!res.ok) throw new Error(res.status); return await res.json(); }
+    finally { clearTimeout(t); }
+  }
+  async function fetchRate() {
+    // Primary: Frankfurter (ECB). Backup: community currency API on jsDelivr.
+    try {
+      const j = await getJSON("https://api.frankfurter.dev/v1/latest?base=GBP&symbols=CZK");
+      if (ok(j.rates && j.rates.CZK)) return { rate: j.rates.CZK, date: j.date };
+    } catch (e) {}
+    const j = await getJSON("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/gbp.min.json");
+    if (!ok(j.gbp && j.gbp.czk)) throw new Error("bad rate");
+    return { rate: j.gbp.czk, date: j.date };
+  }
+  async function refresh(force) {
+    if (fetching) return;
+    if (!force && cache && Date.now() - cache.fetchedAt < MAX_AGE) return;
+    fetching = true; failed = false; showRate();
+    try {
+      const got = await fetchRate();
+      cache = { rate: got.rate, date: got.date, fetchedAt: Date.now() };
+      store.set("czkLive", cache);
+      fetching = false;
+      if (!manual) applyRate(cache.rate); else showRate();
+    } catch (e) {
+      fetching = false; failed = true; showRate();
+    }
+  }
+  rateIn.addEventListener("input", () => {
+    const v = parse(rateIn.value);
+    if (ok(v)) { manual = v; store.set("czkManual", v); applyRate(v); }
+  });
+  rateIn.addEventListener("blur", () => { rateIn.value = rate.toFixed(2); });
+  $("reset").addEventListener("click", () => {
+    manual = null; store.del("czkManual");
+    applyRate(cache ? cache.rate : BUILT_IN.rate);
+    refresh(true);
+  });
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) refresh(false); });
+  window.addEventListener("online", () => refresh(true));
+
+  /* ---------- Chart, notes, prices ---------- */
+  const czkAmounts = [50, 100, 200, 300, 500, 750, 1000, 1500, 2000, 5000];
+  const gbpAmounts = [1, 5, 10, 20, 30, 50, 75, 100, 150, 200];
+  let dir = "czk";
+  try { if (localStorage.getItem("chartDir") === "gbp") dir = "gbp"; } catch (e) {}
+
+  const notes = [
+    { v: 100, who: "Charles IV, who founded Charles University", tint: "#c9b48a" },
+    { v: 200, who: "Jan Amos Komenský, “teacher of nations”", tint: "#d39a6a" },
+    { v: 500, who: "Božena Němcová, author of The Grandmother", tint: "#c98586" },
+    { v: 1000, who: "František Palacký, “father of the nation”", tint: "#a99abf" },
+    { v: 2000, who: "Ema Destinnová, opera soprano", tint: "#c7b26b" },
+    { v: 5000, who: "T. G. Masaryk, first Czechoslovak president", tint: "#a0a8a0" }
+  ];
+  const days = [
+    { day: "Mon 16 Nov", area: "Castle & Malá Strana", places: [
+      { time: "18:30", what: "Vegan's Prague", note: "Czech classics by the castle; pricier for the location", czk: 800, booked: true }
+    ]},
+    { day: "Tue 17 Nov", area: "Kampa & Národní", places: [
+      { time: "12:00", what: "Dosa Dosa", note: "South Indian dosas, Újezd", czk: 560 },
+      { time: "13:45", what: "MyRaw Café", note: "Raw cake and a coffee", czk: 400 },
+      { time: "19:00", what: "Střecha", note: "Vegan goulash, dumplings, svíčková", czk: 600, booked: true }
+    ]},
+    { day: "Wed 18 Nov", area: "Holešovice", places: [
+      { time: "10:30", what: "Bezmasna", note: "Plant-based butcher; a ready-made dish", czk: 380 },
+      { time: "18:30", what: "Pastva", note: "Seasonal vegan plates and handmade pasta", czk: 700, booked: true }
+    ]},
+    { day: "Thu 19 Nov", area: "Kutná Hora & Vinohrady", places: [
+      { time: "Afternoon", what: "Dobrá Čajovna", note: "Tea room in Kutná Hora; a pot of tea", czk: 240 },
+      { time: "19:30", what: "Linh", note: "Vegan Vietnamese; bowls about 265 Kč each, rolls 145 Kč", czk: 800, booked: true }
+    ]},
+    { day: "Fri 20 Nov", area: "Nové Město", places: [
+      { time: "12:15", what: "Veganland", note: "Pay-by-weight Asian buffet, Karlovo náměstí", czk: 440 }
+    ]}
+  ];
+  const prices = [
+    { what: "Two half-litres of Pilsner", note: "Local pub, not Old Town Square", czk: 130 },
+    { what: "Two flat whites", note: "Specialty café", czk: 150 },
+    { what: "24-hour transport pass", note: "Each, trams, metro and Petřín funicular", czk: 120 },
+    { what: "72-hour transport pass", note: "Each, covers bus 59 to the airport", czk: 330 },
+    { what: "Two shots of Becherovka Unfiltered", note: "The vegan one; the Original is clarified with gelatin", czk: 180 },
+    { what: "Prague Castle circuit ticket", note: "Each, cathedral, Old Royal Palace, Golden Lane", czk: 450 }
+  ];
+
+  function renderLedger() {
+    $("segCzk").setAttribute("aria-pressed", String(dir === "czk"));
+    $("segGbp").setAttribute("aria-pressed", String(dir === "gbp"));
+    const keyC = [100, 500, 1000, 2000], keyG = [10, 50, 100];
+    const list = dir === "czk" ? czkAmounts : gbpAmounts;
+    const rows = Math.ceil(list.length / 2);
+    $("ledger").style.setProperty("--rows", rows);
+    $("ledger").innerHTML = list.map((v, i) => {
+      const cls = (i % rows === 0 ? "top " : "") + ((dir === "czk" ? keyC : keyG).includes(v) ? "key" : "");
+      return dir === "czk"
+        ? `<button type="button" class="${cls}" data-czk="${v}"><span>${fmtCZK(v)}</span><span>${fmtGBP(v / rate)}</span></button>`
+        : `<button type="button" class="${cls}" data-gbp="${v}"><span>£${v}</span><span>${fmtCZK(v * rate)}</span></button>`;
+    }).join("");
+  }
+  function renderAll() {
+    $("rateLabel").textContent = `£1 = ${rate.toFixed(2)} Kč`;
+    renderLedger();
+    $("dineList").innerHTML = days.map((d) => `
+      <div class="day">
+        <div class="day-head">${d.day}<span>${d.area}</span></div>
+        ${d.places.map((p) => `
+        <div class="price">
+          <div class="what"><span class="time">${p.time}</span>${p.what}${p.booked ? '<span class="tag">Booked</span>' : ""}<em>${p.note}</em></div>
+          <div class="amt"><b>${fmtGBP(p.czk / rate)}</b><span>${fmtCZK(p.czk)}</span></div>
+        </div>`).join("")}
+      </div>`).join("");
+    const total = days.reduce((t, d) => t + d.places.reduce((u, p) => u + p.czk, 0), 0);
+    $("dineTotal").innerHTML = `<b>Food for the trip:</b> about ${fmtCZK(total)} for two, or ${fmtGBP(total / rate)}.`;
+    $("priceList").innerHTML = prices.map((p) => `
+      <div class="price">
+        <div class="what">${p.what}<em>${p.note}</em></div>
+        <div class="amt"><b>${fmtGBP(p.czk / rate)}</b><span>${fmtCZK(p.czk)}</span></div>
+      </div>`).join("");
+    const pct = (30 / rate - 1) * 100;
+    const adj = Math.abs(pct) < 1.5 ? "" : pct > 0 ? `, then add ${pct.toFixed(0)}%` : `, then take off ${Math.abs(pct).toFixed(0)}%`;
+    $("mental").innerHTML = `<b>Rule of thumb:</b> drop a zero, divide by 3${adj}.`;
+  }
+  $("segCzk").addEventListener("click", () => { dir = "czk"; try { localStorage.setItem("chartDir", dir); } catch (e) {} renderLedger(); });
+  $("segGbp").addEventListener("click", () => { dir = "gbp"; try { localStorage.setItem("chartDir", dir); } catch (e) {} renderLedger(); });
+  $("ledger").addEventListener("click", (e) => {
+    const tr = e.target.closest("button"); if (!tr) return;
+    if (tr.dataset.gbp) { gbpIn.value = tr.dataset.gbp; fromGBP(); } else setCZK(+tr.dataset.czk);
+    $("convert").scrollIntoView({ block: "start" });
+  });
+
+  /* ---------- Tab bar highlighting ---------- */
+  const links = [...document.querySelectorAll(".tabbar a")];
+  const secs = links.map((a) => $(a.dataset.sec));
+  function markActive() {
+    const y = window.innerHeight * 0.35;
+    let cur = secs[0];
+    secs.forEach((s) => { if (s.getBoundingClientRect().top <= y) cur = s; });
+    if (window.innerHeight + window.scrollY >= document.body.scrollHeight - 4) cur = secs[secs.length - 1];
+    links.forEach((a) => a.setAttribute("aria-current", String(a.dataset.sec === cur.id)));
+  }
+  window.addEventListener("scroll", markActive, { passive: true });
+
+  renderAll();
+  fromCZK();
+  markActive();
+  showRate();
+  refresh(false);
+})();
+</script>
+</body>
+</html>
