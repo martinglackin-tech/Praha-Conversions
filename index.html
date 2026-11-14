@@ -100,6 +100,7 @@ h1 .amp { color: var(--gold); font-size: .7em; }
   padding: 16px;
   display: grid;
   gap: 12px;
+  position: relative;
 }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .pair { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 8px; align-items: center; }
@@ -112,7 +113,15 @@ h2 {
   margin: 0;
   text-wrap: balance;
 }
-.clock { width: 56px; height: 56px; flex: none; margin: 2px 0; justify-self: center; }
+.clock {
+  position: absolute; z-index: 3; pointer-events: none;
+  width: clamp(104px, 30vw, 124px); aspect-ratio: 1;
+  left: 66%; bottom: -48px; transform: translateX(-50%);
+  filter: drop-shadow(0 10px 18px rgba(0,0,0,.5));
+  transition: opacity .2s;
+}
+.card:has(details[open]) .clock { opacity: 0; }
+#chart { padding-top: 56px; }
 .rate-main { white-space: nowrap; }
 .clock svg { width: 100%; height: 100%; display: block; }
 .field {
@@ -174,12 +183,12 @@ h2 {
 .quick b { color: var(--parchment); font-weight: 500; }
 details.rate { border-top: 1px dashed var(--river-2); padding-top: 10px; }
 details.rate summary {
-  list-style: none; cursor: pointer; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 8px;
+  list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 8px;
   min-height: 36px; font-size: 14px; color: var(--mist);
 }
 details.rate summary::-webkit-details-marker { display: none; }
 details.rate summary b { color: var(--parchment); font-family: var(--font-num); font-weight: 500; }
-details.rate summary .edit { color: var(--gold); font-size: 13px; justify-self: end; }
+details.rate summary .edit { color: var(--gold); font-size: 13px; }
 .rate-box { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding-top: 8px; font-size: 14px; color: var(--mist); }
 .rate-box input {
   width: 8ch; min-height: 44px;
@@ -360,7 +369,7 @@ footer .sig { font-family: var(--font-display); font-size: 15px; color: var(--pa
         <div class="chips" id="chips" role="group" aria-label="Quick amounts in koruna"></div>
         <p class="quick" id="mental"></p>
         <details class="rate" id="rateDetails">
-          <summary><span class="rate-main">Rate: <b id="rateLabel">£1 = 29.23 Kč</b><small class="rate-src" id="rateSrc"></small></span><span class="clock" aria-hidden="true"><svg viewBox="0 0 100 100" id="orloj"></svg></span><span class="edit">Change</span></summary>
+          <summary><span class="rate-main">Rate: <b id="rateLabel">£1 = 29.23 Kč</b><small class="rate-src" id="rateSrc"></small></span><span class="edit">Change</span></summary>
           <div class="rate-box">
             <label for="rate">£1 =</label>
             <input id="rate" type="text" inputmode="decimal" value="29.23">
@@ -369,6 +378,7 @@ footer .sig { font-family: var(--font-display); font-size: 15px; color: var(--pa
             <p id="rateNote">The rate updates itself from the European Central Bank. To use your own, such as your bank's, type it here and every number on the page follows.</p>
           </div>
         </details>
+        <div class="clock" aria-hidden="true"><svg viewBox="0 0 100 100" id="orloj"></svg></div>
       </div>
     </div>
   </section>
@@ -376,7 +386,7 @@ footer .sig { font-family: var(--font-display); font-size: 15px; color: var(--pa
   <section class="block" id="chart">
     <div class="wrap">
       <h2>Conversion chart</h2>
-      <p class="sub">Tap any amount to load it into the converter.</p>
+      <p class="sub">Tap an amount to load it.</p>
       <div class="seg" role="group" aria-label="Chart direction">
         <button type="button" id="segCzk" aria-pressed="true">Kč → £</button>
         <button type="button" id="segGbp" aria-pressed="false">£ → Kč</button>
