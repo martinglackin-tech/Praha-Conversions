@@ -1,6 +1,6 @@
 // Keeps the app opening when offline. Exchange-rate calls are never cached here;
 // the page saves the last rate itself.
-const CACHE = "praha-v1";
+const CACHE = "praha-v2";
 const SHELL = ["./", "index.html", "manifest.webmanifest", "icon-192.png", "icon-512.png", "apple-touch-icon.png", "favicon-32.png"];
 const FONT_HOSTS = ["fonts.googleapis.com", "fonts.gstatic.com"];
 
